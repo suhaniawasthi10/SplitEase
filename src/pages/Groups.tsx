@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchGroups } from '../store/slices/groupsSlice';
 import Navbar from '../components/Navbar';
 import AddGroupModal from '../components/AddGroupModal';
+import { Card, SkeletonLoader, EmptyState } from '../components/ui';
 
 const Groups: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -25,7 +27,12 @@ const Groups: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      >
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -57,8 +64,13 @@ const Groups: React.FC = () => {
 
         {/* Groups Grid */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <SkeletonLoader variant="card" />
+            <SkeletonLoader variant="card" />
+            <SkeletonLoader variant="card" />
+            <SkeletonLoader variant="card" />
+            <SkeletonLoader variant="card" />
+            <SkeletonLoader variant="card" />
           </div>
         ) : filteredGroups.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -66,10 +78,11 @@ const Groups: React.FC = () => {
               const balance = group.balance || 0;
               const isOwed = balance > 0;
               return (
-                <div
+                <Card
                   key={group._id}
+                  variant="elevated"
+                  interactive
                   onClick={() => navigate(`/groups/${group._id}`)}
-                  className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
                 >
                   {/* Group Icon & Name */}
                   <div className="flex items-center space-x-4 mb-4">
@@ -95,9 +108,8 @@ const Groups: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">Your balance</span>
                         <span
-                          className={`text-lg font-bold ${
-                            isOwed ? 'text-emerald-600' : 'text-red-600'
-                          }`}
+                          className={`text-lg font-bold ${isOwed ? 'text-emerald-600' : 'text-red-600'
+                            }`}
                         >
                           {isOwed ? '+' : '-'}${Math.abs(balance).toFixed(2)}
                         </span>
@@ -108,40 +120,33 @@ const Groups: React.FC = () => {
                       </div>
                     )}
                   </div>
-                </div>
+                </Card>
               );
             })}
           </div>
         ) : (
-          <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-            <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {searchQuery ? 'No groups found' : 'No groups yet'}
-            </h3>
-            <p className="text-gray-600 mb-4">
-              {searchQuery
+          <EmptyState
+            icon={<Users className="w-10 h-10 text-emerald-600" />}
+            title={searchQuery ? 'No groups found' : 'No groups yet'}
+            description={
+              searchQuery
                 ? 'Try a different search term'
-                : 'Create your first group to start splitting expenses'}
-            </p>
-            {!searchQuery && (
-              <button
-                onClick={() => setShowAddGroupModal(true)}
-                className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create Group
-              </button>
-            )}
-          </div>
+                : 'Create your first group to start splitting expenses'
+            }
+            action={!searchQuery ? {
+              label: 'Create Group',
+              onClick: () => setShowAddGroupModal(true)
+            } : undefined}
+          />
         )}
-      </div>
+      </motion.div>
 
       {/* Modals */}
       <AddGroupModal
         isOpen={showAddGroupModal}
         onClose={() => setShowAddGroupModal(false)}
       />
-    </div>
+    </div >
   );
 };
 

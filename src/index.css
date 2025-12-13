@@ -1,1 +1,562 @@
 @import "tailwindcss";
+
+/* CSS Variables for Theme System */
+:root {
+  /* Light Mode Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --bg-hover: #f3f4f6;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f9fafb;
+
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+
+  --border-primary: #e5e7eb;
+  --border-secondary: #d1d5db;
+  --border-glow: transparent;
+
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-700: #1d4ed8;
+
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* Light mode glow effects */
+  --glow-emerald: 0 0 20px rgba(16, 185, 129, 0.15);
+  --glow-red: 0 0 20px rgba(239, 68, 68, 0.15);
+  --glow-blue: 0 0 20px rgba(59, 130, 246, 0.15);
+
+  /* Gradient backgrounds */
+  --gradient-page: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  --gradient-card: none;
+}
+
+/* Dark Mode Colors - Premium Dark Theme */
+.dark {
+  /* Rich dark backgrounds with subtle depth */
+  --bg-primary: #0f1419;
+  --bg-secondary: #1a1f2e;
+  --bg-tertiary: #0a0d14;
+  --bg-hover: #252d3d;
+  --bg-card: rgba(26, 31, 46, 0.8);
+  --bg-card-hover: rgba(37, 45, 61, 0.9);
+
+  /* Softer text colors for comfortable reading */
+  --text-primary: #e7e9ea;
+  --text-secondary: #a3aab5;
+  --text-tertiary: #6e7681;
+
+  /* Glowing borders for dark mode */
+  --border-primary: rgba(56, 68, 92, 0.6);
+  --border-secondary: rgba(78, 93, 122, 0.5);
+  --border-glow: rgba(16, 185, 129, 0.2);
+
+  /* Rich emerald for dark mode */
+  --emerald-50: rgba(16, 185, 129, 0.12);
+  --emerald-100: rgba(16, 185, 129, 0.18);
+  --emerald-500: #34d399;
+  --emerald-600: #10b981;
+  --emerald-700: #34d399;
+
+  /* Rich red for dark mode */
+  --red-50: rgba(239, 68, 68, 0.12);
+  --red-100: rgba(239, 68, 68, 0.18);
+  --red-500: #f87171;
+  --red-600: #ef4444;
+
+  /* Rich blue for dark mode */
+  --blue-50: rgba(59, 130, 246, 0.12);
+  --blue-100: rgba(59, 130, 246, 0.18);
+  --blue-200: rgba(59, 130, 246, 0.25);
+  --blue-700: #60a5fa;
+
+  /* Inverted grays for proper contrast */
+  --gray-50: #252d3d;
+  --gray-100: #2d3548;
+  --gray-200: #3d4657;
+  --gray-300: #6e7681;
+  --gray-400: #a3aab5;
+  --gray-500: #c9cdd4;
+  --gray-600: #e1e4e8;
+  --gray-700: #e7e9ea;
+  --gray-800: #f0f2f4;
+  --gray-900: #ffffff;
+
+  /* Enhanced shadows with color for depth */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.24), 0 0 0 1px rgba(255, 255, 255, 0.02);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5), 0 12px 20px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-2xl: 0 30px 60px rgba(0, 0, 0, 0.6), 0 15px 30px rgba(0, 0, 0, 0.4);
+
+  /* Glow effects for dark mode */
+  --glow-emerald: 0 0 30px rgba(52, 211, 153, 0.25), 0 0 60px rgba(52, 211, 153, 0.1);
+  --glow-red: 0 0 30px rgba(248, 113, 113, 0.25), 0 0 60px rgba(248, 113, 113, 0.1);
+  --glow-blue: 0 0 30px rgba(96, 165, 250, 0.25), 0 0 60px rgba(96, 165, 250, 0.1);
+
+  /* Gradient backgrounds */
+  --gradient-page: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+  --gradient-card: linear-gradient(145deg, rgba(37, 45, 61, 0.4) 0%, rgba(26, 31, 46, 0.8) 100%);
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Dark mode body background with subtle pattern */
+.dark body {
+  background: var(--gradient-page);
+  background-attachment: fixed;
+}
+
+.dark body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(59, 130, 246, 0.05), transparent);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Override Tailwind classes with CSS variables */
+.bg-white {
+  background-color: var(--bg-primary) !important;
+}
+
+.dark .bg-white {
+  background: var(--bg-card) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.bg-gray-50 {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark .bg-gray-50 {
+  background: var(--bg-secondary) !important;
+}
+
+.bg-gray-100 {
+  background-color: var(--bg-tertiary) !important;
+}
+
+.dark .bg-gray-100 {
+  background: var(--bg-tertiary) !important;
+}
+
+.text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+.text-gray-600,
+.text-gray-700 {
+  color: var(--text-secondary) !important;
+}
+
+.text-gray-500 {
+  color: var(--text-tertiary) !important;
+}
+
+.border-gray-200 {
+  border-color: var(--border-primary) !important;
+}
+
+.border-gray-300 {
+  border-color: var(--border-secondary) !important;
+}
+
+/* Enhanced dark mode cards with glassmorphism */
+.dark .rounded-xl,
+.dark .rounded-2xl {
+  border-color: var(--border-primary) !important;
+}
+
+.dark .rounded-xl.bg-white,
+.dark .rounded-2xl.bg-white {
+  background: var(--bg-card) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-primary) !important;
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.dark .rounded-xl.bg-white:hover,
+.dark .rounded-2xl.bg-white:hover {
+  background: var(--bg-card-hover) !important;
+  border-color: var(--border-glow) !important;
+}
+
+/* Emerald themed elements with glow in dark mode */
+.bg-emerald-50 {
+  background-color: var(--emerald-50) !important;
+}
+
+.dark .bg-emerald-50 {
+  background: var(--emerald-50) !important;
+  box-shadow: inset 0 0 20px rgba(52, 211, 153, 0.1);
+}
+
+.bg-emerald-600 {
+  background-color: var(--emerald-600) !important;
+}
+
+.dark .bg-emerald-600 {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.dark .bg-emerald-600:hover {
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+}
+
+.text-emerald-600 {
+  color: var(--emerald-600) !important;
+}
+
+.dark .text-emerald-600 {
+  color: var(--emerald-500) !important;
+  text-shadow: 0 0 20px rgba(52, 211, 153, 0.3);
+}
+
+.text-emerald-700 {
+  color: var(--emerald-700) !important;
+}
+
+.dark .text-emerald-700 {
+  color: var(--emerald-500) !important;
+}
+
+/* Red themed elements with glow in dark mode */
+.bg-red-50 {
+  background-color: var(--red-50) !important;
+}
+
+.dark .bg-red-50 {
+  background: var(--red-50) !important;
+  box-shadow: inset 0 0 20px rgba(248, 113, 113, 0.1);
+}
+
+.text-red-600 {
+  color: var(--red-600) !important;
+}
+
+.dark .text-red-600 {
+  color: var(--red-500) !important;
+  text-shadow: 0 0 20px rgba(248, 113, 113, 0.3);
+}
+
+/* Blue themed elements */
+.bg-blue-50 {
+  background-color: var(--blue-50) !important;
+}
+
+.dark .bg-blue-50 {
+  background: var(--blue-50) !important;
+  box-shadow: inset 0 0 20px rgba(96, 165, 250, 0.1);
+}
+
+.border-blue-200 {
+  border-color: var(--blue-200) !important;
+}
+
+.text-blue-700 {
+  color: var(--blue-700) !important;
+}
+
+.dark .text-blue-700 {
+  color: #60a5fa !important;
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+}
+
+/* Dark mode navbar enhancement */
+.dark nav {
+  background: rgba(15, 20, 25, 0.85) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--border-primary) !important;
+}
+
+/* Dark mode modal/dropdown enhancement */
+.dark .shadow-lg,
+.dark .shadow-xl {
+  box-shadow: var(--shadow-xl) !important;
+}
+
+/* Dark mode form inputs */
+.dark input,
+.dark select,
+.dark textarea {
+  background: rgba(37, 45, 61, 0.6) !important;
+  border-color: var(--border-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: var(--emerald-500) !important;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15), var(--glow-emerald) !important;
+  outline: none !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--text-tertiary) !important;
+}
+
+/* Dark mode buttons */
+.dark button.bg-gray-50,
+.dark button.hover\:bg-gray-50:hover {
+  background: var(--bg-card) !important;
+}
+
+.dark button.hover\:bg-gray-100:hover {
+  background: var(--bg-hover) !important;
+}
+
+/* Enhanced gradient cards in dark mode */
+.dark .bg-gradient-to-br {
+  box-shadow: var(--glow-emerald);
+}
+
+/* Dark mode hover states with glow */
+.dark .hover\:shadow-md:hover,
+.dark .hover\:shadow-lg:hover {
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(16, 185, 129, 0.08) !important;
+}
+
+/* Scrollbar styling for dark mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Dark mode skeleton loaders */
+.dark .animate-pulse {
+  opacity: 0.6;
+}
+
+/* Dark mode text selection */
+.dark ::selection {
+  background: rgba(52, 211, 153, 0.3);
+  color: #ffffff;
+}
+
+/* Ensure proper contrast for disabled states */
+.dark .disabled\:opacity-50:disabled,
+.dark .disabled\:cursor-not-allowed:disabled {
+  opacity: 0.4 !important;
+}
+
+/* Dark mode avatar backgrounds */
+.dark .bg-purple-400,
+.dark .bg-pink-400 {
+  background: linear-gradient(135deg, #a855f7, #ec4899) !important;
+}
+
+/* Dark mode toast notifications */
+.dark [data-sonner-toast] {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Dark mode login/signup page gradients */
+.dark .bg-gradient-to-br.from-emerald-50,
+.dark .bg-gradient-to-br.from-emerald-50.via-teal-50,
+.dark .from-emerald-50 {
+  background: linear-gradient(135deg, #0f1419 0%, #1a2332 50%, #0f1419 100%) !important;
+}
+
+/* Dark mode modal overlay */
+.dark .bg-black.bg-opacity-50 {
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Dark mode modal content */
+.dark .bg-white.rounded-2xl.shadow-2xl,
+.dark .bg-white.rounded-xl.shadow-xl {
+  background: rgba(26, 31, 46, 0.95) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-primary);
+}
+
+/* Dark mode links */
+.dark a.text-gray-600,
+.dark a.text-gray-700 {
+  color: var(--text-secondary) !important;
+}
+
+.dark a.text-gray-600:hover,
+.dark a.text-gray-700:hover,
+.dark a.hover\:text-gray-900:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Dark mode cancel buttons */
+.dark .border-gray-300.text-gray-700,
+.dark button.border-gray-300 {
+  border-color: var(--border-primary) !important;
+  color: var(--text-secondary) !important;
+  background: rgba(37, 45, 61, 0.4) !important;
+}
+
+.dark .border-gray-300.text-gray-700:hover,
+.dark button.border-gray-300:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Dark mode feature cards on home page */
+.dark .border-gray-100 {
+  border-color: var(--border-primary) !important;
+}
+
+.dark .hover\:border-emerald-200:hover {
+  border-color: rgba(52, 211, 153, 0.4) !important;
+}
+
+/* Dark mode icons and text in icons */
+.dark .text-gray-400 {
+  color: #6e7681 !important;
+}
+
+.dark .text-gray-300 {
+  color: #4d5768 !important;
+}
+
+/* Dark mode divider lines */
+.dark .border-gray-100 {
+  border-color: rgba(56, 68, 92, 0.5) !important;
+}
+
+/* Dark mode shadow on buttons */
+.dark .shadow-lg.shadow-emerald-600\/30 {
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35), 0 0 30px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Dark mode feature icons */
+.dark .bg-emerald-100 {
+  background: rgba(16, 185, 129, 0.15) !important;
+}
+
+.dark .bg-red-100 {
+  background: rgba(239, 68, 68, 0.15) !important;
+}
+
+.dark .bg-blue-100 {
+  background: rgba(59, 130, 246, 0.15) !important;
+}
+
+.dark .bg-purple-100 {
+  background: rgba(168, 85, 247, 0.15) !important;
+}
+
+.dark .bg-pink-100 {
+  background: rgba(236, 72, 153, 0.15) !important;
+}
+
+.dark .bg-orange-100 {
+  background: rgba(251, 146, 60, 0.15) !important;
+}
+
+.dark .bg-cyan-100 {
+  background: rgba(34, 211, 238, 0.15) !important;
+}
+
+/* Dark mode CTA gradient */
+.dark .from-emerald-600.to-teal-700,
+.dark .bg-gradient-to-br.from-emerald-600 {
+  background: linear-gradient(135deg, #059669 0%, #0d9488 100%) !important;
+  box-shadow: 0 0 60px rgba(16, 185, 129, 0.3), 0 4px 30px rgba(16, 185, 129, 0.25) !important;
+}
+
+/* Dark mode white elements inside gradient */
+.dark .bg-gradient-to-br .text-emerald-50 {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Dark mode footer */
+.dark footer {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-primary) !important;
+}
+
+/* Ensure min-h-screen has dark bg */
+.dark .min-h-screen {
+  background: var(--bg-tertiary) !important;
+}
+
+/* Dark mode loading spinners */
+.dark .border-b-2.border-emerald-600 {
+  border-color: var(--emerald-500) !important;
+}
+
+/* Additional polish for focus rings */
+.dark .focus\:ring-emerald-500:focus {
+  --tw-ring-color: rgba(52, 211, 153, 0.5);
+}
+
+/* Ensure stats badges look good */
+.dark .inline-flex.items-center.px-3.py-1.rounded-full.bg-emerald-50 {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Line clamp text color fix */
+.dark .line-clamp-2 {
+  color: var(--text-secondary) !important;
+}

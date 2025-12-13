@@ -1,11 +1,4 @@
-import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:8002/api';
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true,
-});
+import api from '../utils/axios';
 
 export interface BalanceSummary {
   youOwe: number;
@@ -17,20 +10,28 @@ export interface BalanceSummary {
 
 export interface DetailedBalance {
   _id: string;
-  amount: number;
   fromUserId?: {
     _id: string;
     name: string;
     username: string;
+    upiId?: string;
   };
   toUserId?: {
     _id: string;
     name: string;
     username: string;
+    upiId?: string;
   };
+  amount: number;
   groupId?: {
     _id: string;
     name: string;
+  };
+  user: {
+    _id: string;
+    name: string;
+    username: string;
+    upiId?: string;
   };
 }
 

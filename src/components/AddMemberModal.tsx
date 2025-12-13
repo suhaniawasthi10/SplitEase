@@ -53,7 +53,7 @@ const AddMemberModal: React.FC<AddMemberModalProps> = ({
       const filtered = data.filter((friend: Friend) => !existingMemberIds.includes(friend._id));
       setFriends(filtered);
     } catch (err) {
-      console.error('Failed to search friends:', err);
+      // Silent fail - search errors are not critical
     } finally {
       setLoading(false);
     }
@@ -123,11 +123,10 @@ const AddMemberModal: React.FC<AddMemberModalProps> = ({
           <button
             type="button"
             onClick={() => setMode('friend')}
-            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-              mode === 'friend'
+            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${mode === 'friend'
                 ? 'bg-emerald-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             <div className="flex items-center justify-center space-x-2">
               <UserPlus className="w-4 h-4" />
@@ -137,11 +136,10 @@ const AddMemberModal: React.FC<AddMemberModalProps> = ({
           <button
             type="button"
             onClick={() => setMode('email')}
-            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-              mode === 'email'
+            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${mode === 'email'
                 ? 'bg-emerald-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             <div className="flex items-center justify-center space-x-2">
               <Mail className="w-4 h-4" />

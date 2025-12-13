@@ -1,25 +1,5 @@
-import axios from 'axios';
+import api from '../utils/axios';
 import type { SignUpData, LoginData, AuthResponse, User } from '../types/auth';
-
-const API_BASE_URL = 'http://localhost:8002/api';
-
-// Create axios instance with default config
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true, // Important: This ensures cookies are sent with requests
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add response interceptor to handle common errors
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Don't automatically redirect - let components handle 401 errors
-    return Promise.reject(error);
-  }
-);
 
 export const authService = {
   // Sign up new user
@@ -54,7 +34,7 @@ export const authService = {
   // Get current user (for persistent login)
   async getCurrentUser(): Promise<User> {
     try {
-      const response = await api.get('/user/current');
+      const response = await api.get('/user/me');
       return response.data.user;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to get current user');

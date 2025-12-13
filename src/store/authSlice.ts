@@ -73,6 +73,11 @@ const authSlice = createSlice({
     clearUser: (state) => {
       state.user = null;
     },
+    updateUserProfile: (state, action: PayloadAction<Partial<User>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -86,7 +91,7 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.error = null;
       })
-      .addCase(checkAuth.rejected, (state, action) => {
+      .addCase(checkAuth.rejected, (state, _action) => {
         state.loading = false;
         state.user = null;
         // Don't set error for failed auth check (user just not logged in)
@@ -138,5 +143,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, clearUser } = authSlice.actions;
+export const { clearError, clearUser, updateUserProfile } = authSlice.actions;
 export default authSlice.reducer;

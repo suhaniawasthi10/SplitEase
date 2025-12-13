@@ -1,12 +1,5 @@
-import axios from 'axios';
+import api from '../utils/axios';
 import type { Group } from '../types/models';
-
-const API_BASE_URL = 'http://localhost:8002/api';
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true,
-});
 
 export const groupsService = {
   async getUserGroups(): Promise<Group[]> {

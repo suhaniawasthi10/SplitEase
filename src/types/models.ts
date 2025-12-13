@@ -54,12 +54,31 @@ export interface Activity {
   createdAt: string;
 }
 
+export interface User {
+  _id: string;
+  name: string;
+  username: string;
+  email: string;
+  preferredCurrency?: string;
+  upiId?: string;
+  profileImage?: {
+    url: string | null;
+    publicId: string | null;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface GroupMember {
   userId: {
     _id: string;
     username: string;
     name: string;
     email: string;
+    profileImage?: {
+      url: string | null;
+      publicId: string | null;
+    };
   };
   role: 'owner' | 'admin' | 'member';
   joinedAt: string;

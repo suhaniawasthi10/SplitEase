@@ -1,12 +1,5 @@
-import axios from 'axios';
+import api from '../utils/axios';
 import type { GroupDetails, GroupStats, UserBalance, Expense } from '../types/models';
-
-const API_BASE_URL = 'http://localhost:8002/api';
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true,
-});
 
 export interface GroupDetailsResponse {
   group: GroupDetails;
@@ -52,6 +45,16 @@ export const groupDetailsService = {
 
   async rejectInvite(token: string): Promise<{ message: string }> {
     const response = await api.post(`/groups/invite/${token}/reject`);
+    return response.data;
+  },
+
+  async leaveGroup(groupId: string): Promise<{ message: string }> {
+    const response = await api.post(`/groups/${groupId}/leave`);
+    return response.data;
+  },
+
+  async deleteGroup(groupId: string): Promise<{ message: string }> {
+    const response = await api.delete(`/groups/${groupId}`);
     return response.data;
   },
 };

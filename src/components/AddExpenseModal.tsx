@@ -49,10 +49,40 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
     try {
       const participants = Array.from(selectedMembers).map(userId => {
-        const share = customShares[userId];
+        let share: number;
+
+        if (splitType === 'equal') {
+          // Equal split - divide equally among all selected
+          share = parseFloat(amount) / selectedMembers.size;
+        } else if (splitType === 'exact') {
+          // Exact split with auto-calculation for blank fields
+          const customShare = customShares[userId];
+
+          if (customShare && customShare !== '') {
+            // User specified an amount
+            share = parseFloat(customShare);
+          } else {
+            // Auto-calculate: divide remaining amount among participants without specified amounts
+            const totalAssigned = Object.entries(customShares)
+              .filter(([id, val]) => selectedMembers.has(id) && val !== '')
+              .reduce((sum, [_, val]) => sum + parseFloat(val || '0'), 0);
+
+            const remaining = parseFloat(amount) - totalAssigned;
+            const blankCount = Array.from(selectedMembers).filter(
+              id => !customShares[id] || customShares[id] === ''
+            ).length;
+
+            share = blankCount > 0 ? remaining / blankCount : 0;
+          }
+        } else {
+          // Percentage split
+          const customShare = customShares[userId];
+          share = customShare ? (parseFloat(amount) * parseFloat(customShare)) / 100 : 0;
+        }
+
         return {
           userId,
-          ...(share && splitType !== 'equal' ? { share: parseFloat(share) } : {})
+          share
         };
       });
 
@@ -102,21 +132,27 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              Description *
+            </label>
             <input
+              id="description"
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-              placeholder="e.g., Dinner, Groceries, Rent"
+              placeholder="e.g., Dinner at restaurant"
             />
           </div>
 
           {/* Amount */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Amount ($) *</label>
+            <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
+              Amount ($) *
+            </label>
             <input
+              id="amount"
               type="number"
               step="0.01"
               value={amount}
@@ -136,11 +172,10 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   key={type}
                   type="button"
                   onClick={() => setSplitType(type)}
-                  className={`px-4 py-2 rounded-lg border-2 font-medium transition-colors ${
-                    splitType === type
-                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                  }`}
+                  className={`px-4 py-2 rounded-lg border-2 font-medium transition-colors ${splitType === type
+                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                    : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                    }`}
                 >
                   {type.charAt(0).toUpperCase() + type.slice(1)}
                 </button>
@@ -167,20 +202,20 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         disabled={isPayer}
                         className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
                       />
-                      <span className="text-sm font-medium">
-                        {member.userId.name} {isPayer && '(You - Payer)'}
+                      <span className="font-medium text-gray-900">
+                        {member.userId.name}
+                        {isPayer && ' (You - Payer)'}
                       </span>
                     </div>
-
-                    {/* Custom Share Input */}
                     {isSelected && splitType !== 'equal' && (
                       <input
                         type="number"
                         step="0.01"
+                        min="0"
                         value={customShares[userId] || ''}
                         onChange={(e) => setCustomShares({ ...customShares, [userId]: e.target.value })}
                         placeholder={splitType === 'percentage' ? '%' : '$'}
-                        className="w-24 px-3 py-1 text-sm rounded border border-gray-300 focus:ring-2 focus:ring-emerald-500 outline-none"
+                        className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       />
                     )}
                   </div>
@@ -195,7 +230,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           </div>
 
           {/* Buttons */}
-          <div className="flex space-x-3 pt-4">
+          <div className="flex space-x-3 pt-2">
             <button
               type="button"
               onClick={handleClose}

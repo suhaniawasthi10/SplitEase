@@ -1,0 +1,60 @@
+// Currency types and utilities
+
+export interface Currency {
+    code: string;
+    symbol: string;
+    name: string;
+}
+
+export const CURRENCIES: Currency[] = [
+    { code: 'USD', symbol: '$', name: 'US Dollar' },
+    { code: 'EUR', symbol: '€', name: 'Euro' },
+    { code: 'GBP', symbol: '£', name: 'British Pound' },
+    { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
+    { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
+    { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
+    { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
+    { code: 'CNY', symbol: '¥', name: 'Chinese Yuan' },
+    { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc' },
+    { code: 'SEK', symbol: 'kr', name: 'Swedish Krona' },
+    { code: 'NZD', symbol: 'NZ$', name: 'New Zealand Dollar' },
+    { code: 'MXN', symbol: 'MX$', name: 'Mexican Peso' },
+    { code: 'SGD', symbol: 'S$', name: 'Singapore Dollar' },
+    { code: 'HKD', symbol: 'HK$', name: 'Hong Kong Dollar' },
+    { code: 'NOK', symbol: 'kr', name: 'Norwegian Krone' },
+    { code: 'KRW', symbol: '₩', name: 'South Korean Won' },
+    { code: 'TRY', symbol: '₺', name: 'Turkish Lira' },
+    { code: 'RUB', symbol: '₽', name: 'Russian Ruble' },
+    { code: 'BRL', symbol: 'R$', name: 'Brazilian Real' },
+    { code: 'ZAR', symbol: 'R', name: 'South African Rand' },
+];
+
+// Get currency symbol by code
+export const getCurrencySymbol = (code: string): string => {
+    const currency = CURRENCIES.find(c => c.code === code);
+    return currency?.symbol || '$';
+};
+
+// Get currency name by code
+export const getCurrencyName = (code: string): string => {
+    const currency = CURRENCIES.find(c => c.code === code);
+    return currency?.name || 'US Dollar';
+};
+
+// Format amount with currency
+export const formatCurrency = (amount: number, currencyCode: string = 'USD'): string => {
+    const symbol = getCurrencySymbol(currencyCode);
+    const formattedAmount = amount.toFixed(2);
+
+    // For currencies that typically show symbol after amount
+    if (['EUR', 'SEK', 'NOK'].includes(currencyCode)) {
+        return `${formattedAmount}${symbol}`;
+    }
+
+    return `${symbol}${formattedAmount}`;
+};
+
+// Get currency object by code
+export const getCurrency = (code: string): Currency | undefined => {
+    return CURRENCIES.find(c => c.code === code);
+};

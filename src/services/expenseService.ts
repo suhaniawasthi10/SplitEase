@@ -1,12 +1,5 @@
-import axios from 'axios';
+import api from '../utils/axios';
 import type { Expense } from '../types/models';
-
-const API_BASE_URL = 'http://localhost:8002/api';
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true,
-});
 
 export interface CreateExpenseData {
   description: string;
@@ -35,6 +28,16 @@ export const expenseService = {
 
   async changePayer(expenseId: string, newPayerId: string): Promise<Expense> {
     const response = await api.put(`/expenses/${expenseId}/change-payer`, { newPayerId });
+    return response.data.expense;
+  },
+
+  async getExpenses(params?: { groupId?: string; limit?: number; skip?: number }): Promise<{ expenses: Expense[]; total: number }> {
+    const response = await api.get('/expenses', { params });
+    return response.data;
+  },
+
+  async getExpenseDetails(expenseId: string): Promise<Expense> {
+    const response = await api.get(`/expenses/${expenseId}`);
     return response.data.expense;
   },
 };

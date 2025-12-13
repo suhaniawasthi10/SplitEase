@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchActivities } from '../store/slices/activitySlice';
+import { formatCurrency } from '../utils/currency';
 import Navbar from '../components/Navbar';
+import { Card, SkeletonLoader } from '../components/ui';
 
 const Activity: React.FC = () => {
   const dispatch = useAppDispatch();
   const { activities, loading } = useAppSelector((state) => state.activity);
+  const { user } = useAppSelector((state) => state.auth); // Added for preferredCurrency
   const [limit, setLimit] = useState(20);
   const [hasMore, setHasMore] = useState(true);
 
@@ -38,28 +42,18 @@ const Activity: React.FC = () => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case 'expense_added':
-        return '💸';
-      case 'expense_updated':
-        return '✏️';
-      case 'expense_deleted':
-        return '🗑️';
-      case 'settlement':
-        return '✅';
-      case 'group_created':
-        return '🎉';
-      default:
-        return '📌';
-    }
-  };
+  // Removed getActivityIcon as it's no longer used in the new UI
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      >
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Activity</h1>
@@ -67,54 +61,45 @@ const Activity: React.FC = () => {
         </div>
 
         {/* Activity Feed */}
-        <div className="bg-white rounded-xl border border-gray-200">
+        <div className="space-y-4">
           {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
-            </div>
+            <>
+              <SkeletonLoader variant="list" />
+              <SkeletonLoader variant="list" />
+              <SkeletonLoader variant="list" />
+              <SkeletonLoader variant="list" />
+              <SkeletonLoader variant="list" />
+            </>
           ) : activities.length > 0 ? (
             <>
-              <div className="divide-y divide-gray-100">
-                {activities.map((activity) => (
-                  <div
-                    key={activity._id}
-                    className="p-6 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-start space-x-4">
-                      {/* Activity Icon */}
-                      <div className="flex-shrink-0 w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-2xl">
-                        {getActivityIcon(activity.activityType)}
-                      </div>
-
-                      {/* Activity Content */}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900">{activity.description}</p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {formatActivityTime(activity.createdAt)}
+              {activities.map((activity) => (
+                <Card
+                  key={activity._id}
+                  className="hover:border-emerald-100"
+                >
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-900">{activity.description}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {formatActivityTime(activity.createdAt)}
+                      </p>
+                    </div>
+                    {activity.amount && (
+                      <div className="text-right">
+                        <p className={`text-sm font-semibold ${activity.activityType === 'settlement'
+                          ? 'text-emerald-600'
+                          : 'text-gray-900'
+                          }`}>
+                          {formatCurrency(activity.amount, user?.preferredCurrency)}
                         </p>
                       </div>
-
-                      {/* Amount */}
-                      {activity.amount && (
-                        <div className="flex-shrink-0">
-                          <p
-                            className={`text-sm font-semibold ${
-                              activity.activityType === 'settlement'
-                                ? 'text-emerald-600'
-                                : 'text-gray-900'
-                            }`}
-                          >
-                            ${activity.amount.toFixed(2)}
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                    )}
                   </div>
-                ))}
-              </div>
+                </Card>
+              ))}
               {/* Load More Button */}
               {hasMore && activities.length >= 20 && (
-                <div className="p-6 border-t border-gray-100 text-center">
+                <div className="p-6 text-center">
                   <button
                     onClick={handleLoadMore}
                     disabled={loading}
@@ -133,8 +118,8 @@ const Activity: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </div >
   );
 };
 

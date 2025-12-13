@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { X, Trash2 } from 'lucide-react';
 import { expenseService } from '../services/expenseService';
+import { showSuccess, showError } from '../utils/toast';
+import ConfirmDialog from './ConfirmDialog';
 import type { Expense } from '../types/models';
 
 interface ExpenseDetailsModalProps {
@@ -31,10 +33,13 @@ const ExpenseDetailsModal: React.FC<ExpenseDetailsModalProps> = ({
     setIsDeleting(true);
     try {
       await expenseService.deleteExpense(expense._id);
+      showSuccess('Expense deleted successfully');
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to delete expense');
+      const errorMsg = err.response?.data?.message || 'Failed to delete expense';
+      setError(errorMsg);
+      showError(errorMsg);
     } finally {
       setIsDeleting(false);
       setShowDeleteConfirm(false);
@@ -91,8 +96,8 @@ const ExpenseDetailsModal: React.FC<ExpenseDetailsModalProps> = ({
                 <div key={participant.userId._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <span className="text-sm font-medium">{participant.userId.name}</span>
                   <span className="text-sm font-semibold text-gray-900">
-                    {expense.splitType === 'percentage' 
-                      ? `${participant.share.toFixed(1)}%` 
+                    {expense.splitType === 'percentage'
+                      ? `${participant.share.toFixed(1)}%`
                       : `$${participant.share.toFixed(2)}`}
                   </span>
                 </div>
@@ -101,30 +106,8 @@ const ExpenseDetailsModal: React.FC<ExpenseDetailsModalProps> = ({
           </div>
         </div>
 
-        {/* Delete Confirmation */}
-        {showDeleteConfirm && (
-          <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-sm text-red-800 mb-3">Are you sure you want to delete this expense? This action cannot be undone.</p>
-            <div className="flex space-x-2">
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
-              >
-                {isDeleting ? 'Deleting...' : 'Confirm Delete'}
-              </button>
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Action Buttons */}
-        {isPayer && !showDeleteConfirm && (
+        {isPayer && (
           <div className="flex space-x-3 pt-4 border-t">
             <button
               onClick={() => setShowDeleteConfirm(true)}
@@ -136,12 +119,24 @@ const ExpenseDetailsModal: React.FC<ExpenseDetailsModalProps> = ({
           </div>
         )}
 
-        {!isPayer && !showDeleteConfirm && (
+        {!isPayer && (
           <p className="text-sm text-gray-500 italic pt-4 border-t">
             Only the payer can delete this expense.
           </p>
         )}
       </div>
+
+      {/* Confirm Delete Dialog */}
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDelete}
+        title="Delete Expense?"
+        message="Are you sure you want to delete this expense? This action cannot be undone and will affect all participants."
+        confirmText="Delete Expense"
+        isDestructive={true}
+        loading={isDeleting}
+      />
     </div>
   );
 };

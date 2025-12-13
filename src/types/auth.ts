@@ -3,8 +3,14 @@ export interface User {
   name: string;
   username: string;
   email: string;
-  createdAt: string;
-  updatedAt: string;
+  preferredCurrency?: string;
+  upiId?: string;
+  profileImage?: {
+    url: string | null;
+    publicId: string | null;
+  };
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SignUpData {
